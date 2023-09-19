@@ -5,8 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.Button;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.app.DatePickerDialog;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,56 +16,84 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
-
+import android.content.Intent;
+import android.net.Uri;
 import org.json.JSONObject;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private DatePicker datePicker;
+    private TextView urlDisplay;
+    private TextView dateDisplay;
+    private Button pickDateButton;
     private ImageView imageView;
+    private Button saveButton;
+
     private final String BASE_URL = "https://api.nasa.gov/";
     private final String API_KEY = "mjPPt1dcjX4B7LIzgtaYQ781ahZUxMvQXWPyCV4y";
+    private String hdUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        datePicker = findViewById(R.id.datePicker);
         imageView = findViewById(R.id.imageView);
+        urlDisplay = findViewById(R.id.urlDisplay);
+        dateDisplay = findViewById(R.id.dateDisplay);
+        pickDateButton = findViewById(R.id.pickDateButton);
+        saveButton = findViewById(R.id.saveButton);
 
-        // Get the current date
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        pickDateButton.setOnClickListener(view -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-        // Set the current date to the DatePicker
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String selectedDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+            DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, (datePicker, selectedYear, selectedMonth, selectedDay) -> {
+                String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
                 new FetchImageTask().execute(selectedDate);
-            }
+            }, year, month, day);
+            datePickerDialog.show();
         });
+
+
+
+
     }
 
+
     private class FetchImageTask extends AsyncTask<String, Void, Bitmap> {
+        private String date; // For storing the date
+
         @Override
         protected Bitmap doInBackground(String... dates) {
-            String imageUrl = fetchNasaImageUrl(dates[0]);
+            date = dates[0];
+            String imageUrl = fetchNasaImageUrl(date);
             if (imageUrl != null) {
                 return loadImageFromUrl(imageUrl);
             }
             return null;
         }
 
+
+
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
+
+                dateDisplay.setText("Date: " + date);
+                urlDisplay.setText("URL: " + hdUrl);
+
+                urlDisplay.setOnClickListener(v -> {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(hdUrl));
+                    startActivity(browserIntent);
+                });
             }
+
         }
     }
 
@@ -87,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
             String finalJson = buffer.toString();
             JSONObject parentObject = new JSONObject(finalJson);
+            hdUrl = parentObject.getString("hdurl"); // Store the HDURL
             return parentObject.getString("url");
 
         } catch (Exception e) {

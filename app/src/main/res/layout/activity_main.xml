@@ -7,24 +7,24 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:spinnersShown="true" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/urlDisplay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="URL" />
+
+    <TextView
+        android:id="@+id/dateDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/pickDateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Pick Date" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -33,12 +33,9 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Save Image" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </LinearLayout>
