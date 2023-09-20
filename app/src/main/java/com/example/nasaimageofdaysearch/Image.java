@@ -1,28 +1,31 @@
 package com.example.nasaimageofdaysearch;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "image_table")
+@Entity(tableName = "images")
 public class Image {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    @ColumnInfo(name = "date")
     private String date;
+
+    @ColumnInfo(name = "url")
     private String url;
+
+    @ColumnInfo(name = "hdUrl")
     private String hdUrl;
+
+    @ColumnInfo(name = "imagePath")
     private String imagePath;
 
-    // Constructors
-    public Image(String date, String url, String hdUrl, String imagePath) {
-        this.date = date;
-        this.url = url;
-        this.hdUrl = hdUrl;
-        this.imagePath = imagePath;
+
+    public Image() {
     }
 
-    // Getters and setters
     public int getId() {
         return id;
     }
@@ -35,15 +38,32 @@ public class Image {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getHdUrl() {
         return hdUrl;
     }
 
+    public void setHdUrl(String hdUrl) {
+        this.hdUrl = hdUrl;
+    }
+
     public String getImagePath() {
         return imagePath;
     }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }
+

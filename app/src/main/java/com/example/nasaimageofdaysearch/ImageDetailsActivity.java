@@ -20,13 +20,10 @@ public class ImageDetailsActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.dateTextView);
         urlTextView = findViewById(R.id.urlTextView);
 
-        // Fetch Image details, populate the views and display them.
-        // For the sake of example, let's assume you pass Image object via Intent:
         Image image = (Image) getIntent().getSerializableExtra("IMAGE");
         if (image != null) {
             dateTextView.setText(image.getDate());
             urlTextView.setText(image.getUrl());
-            // Load the image into ImageView, perhaps using a library like Picasso or Glide.
         }
     }
 }
