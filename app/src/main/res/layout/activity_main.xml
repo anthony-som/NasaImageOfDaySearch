@@ -42,7 +42,7 @@
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Image"/>
+        android:text="Delete Image" />
 
     <Button
         android:id="@+id/btnViewSavedImages"

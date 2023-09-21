@@ -3,6 +3,7 @@ package com.example.nasaimageofdaysearch;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +11,32 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.net.Uri;
 import android.widget.TextView;
+import android.Manifest;
+import android.widget.Toast;
+
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ImageViewHolder> {
     private List<Image> images;
     private Context context;
+
     public ImageListAdapter(List<Image> images, Context context) {
         this.images = images != null ? images : new ArrayList<>();
         this.context = context;
     }
+    public void updateData(List<Image> newImages) {
+        this.images = newImages != null ? newImages : new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override
@@ -66,7 +79,71 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         holder.itemView.setOnClickListener(v -> {
         });
         holder.imageDate.setText(currentImage.getDate());
+
+        holder.deleteImage.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            Image imageToDelete = images.get(currentPosition);
+            new DeleteImageTask(currentPosition).execute(imageToDelete);
+        });
+
+
+
+
     }
+
+    private class DeleteImageTask extends AsyncTask<Image, Void, Boolean> {
+        int position;
+
+        DeleteImageTask(int position) {
+            this.position = position;
+        }
+        @Override
+        protected Boolean doInBackground(Image... images) {
+            String imagePath = images[0].getImagePath();
+
+            if (imagePath.startsWith("content://")) {
+                return deleteImageFromMediaStore(imagePath);
+            } else {
+                if (deleteFileFromStorage(imagePath)) {
+                    NasaImageDatabase db = NasaImageDatabase.getInstance(context);
+                    db.imageDAO().deleteImage(images[0]);
+                    List<Image> allImages = db.imageDAO().getAllImages();
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                images.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, images.size());
+
+                Toast.makeText(context, "Image deleted successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to delete the image. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        private boolean deleteImageFromMediaStore(String imagePath) {
+            Uri imageUri = Uri.parse(imagePath);
+            int deletedRows = context.getContentResolver().delete(imageUri, null, null);
+            return deletedRows > 0;
+        }
+        private boolean deleteFileFromStorage(String path) {
+            if(path != null && !path.isEmpty()) {
+                File file = new File(path);
+                return file.delete();
+            }
+            return false;
+        }
+
+    }
+
+
 
     @Override
     public int getItemCount() {
@@ -76,11 +153,13 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
     static class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView imageDate;
+        TextView deleteImage;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageDate = itemView.findViewById(R.id.imageDate);
             imageView = itemView.findViewById(R.id.imageItem);
+            deleteImage = itemView.findViewById(R.id.deleteImage);
         }
 
     }

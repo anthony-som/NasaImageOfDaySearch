@@ -1,5 +1,7 @@
 package com.example.nasaimageofdaysearch;
+
 import android.Manifest;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.app.DatePickerDialog;
+
 import java.io.BufferedReader;
 import java.io.File;
 
@@ -30,9 +33,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
+
 import android.content.Intent;
 import android.net.Uri;
+
 import org.json.JSONObject;
+
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -110,10 +116,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
 
 
     private String saveImageToStorage(Bitmap bitmap, String date) {
@@ -208,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void deleteImageFromStorageAndDatabase() {
         NasaImageDatabase db = NasaImageDatabase.getInstance(this);
         new Thread(() -> {
@@ -240,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private class FetchImageTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... dates) {
@@ -252,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
 
 
         @Override

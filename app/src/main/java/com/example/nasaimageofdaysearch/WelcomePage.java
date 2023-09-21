@@ -7,6 +7,7 @@ import android.os.Handler;
 
 public class WelcomePage extends Activity {
     private static final int SPLASH_DISPLAY_LENGTH = 2000;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,16 +1,15 @@
 package com.example.nasaimageofdaysearch;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ImageDetailsActivity extends AppCompatActivity {
-
     private ImageView detailsImageView;
     private TextView dateTextView;
     private TextView urlTextView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
