@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="#F3F3F3">
 
     <ImageView
         android:id="@+id/imageItem"
@@ -17,6 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:textColor="#0B3D91"
         android:text="Date" />
 
     <TextView
@@ -26,6 +28,7 @@
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
+        android:textColor="#FC3D21"
         android:text="Delete" />
 
 

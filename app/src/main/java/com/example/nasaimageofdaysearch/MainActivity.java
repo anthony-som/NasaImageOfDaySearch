@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btnViewSavedImages = findViewById(R.id.btnViewSavedImages);
-        Button deleteButton = findViewById(R.id.deleteButton);
         imageView = findViewById(R.id.imageView);
         urlDisplay = findViewById(R.id.urlDisplay);
         dateDisplay = findViewById(R.id.dateDisplay);
@@ -85,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         saveButton.setOnClickListener(view -> {
+
+            //exception
+            if (imageView.getDrawable() == null) {
+                Toast.makeText(MainActivity.this, "Pick a date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this,
@@ -105,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        deleteButton.setOnClickListener(view -> deleteImageFromStorageAndDatabase());
 
         btnViewSavedImages.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setImageBitmap(bitmap);
 
                 dateDisplay.setText("Date: " + date);
-                urlDisplay.setText("URL: " + hdUrl);
+                urlDisplay.setText(hdUrl);
 
                 urlDisplay.setOnClickListener(v -> {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(hdUrl));

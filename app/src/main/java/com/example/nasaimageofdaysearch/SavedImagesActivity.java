@@ -1,10 +1,12 @@
 package com.example.nasaimageofdaysearch;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +31,12 @@ public class SavedImagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_images);
 
+        Button btnReturnHome = findViewById(R.id.btnReturnHome);
+        btnReturnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(SavedImagesActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
