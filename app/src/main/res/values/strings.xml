@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">NasaImageOfDaySearch</string>
     <string name="image_description">NASA Image of the Day</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="help">Help</string>
 
 </resources>

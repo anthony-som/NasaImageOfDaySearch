@@ -2,9 +2,14 @@ package com.example.nasaimageofdaysearch;
 
 import android.Manifest;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
@@ -15,6 +20,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Button;
@@ -43,6 +51,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 public class MainActivity extends AppCompatActivity {
     private TextView urlDisplay;
     private TextView dateDisplay;
@@ -54,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     private String url;
     private static final int REQUEST_MEDIA_ACCESS_PERMISSION = 102;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
     private final String BASE_URL = "https://api.nasa.gov/";
     private final String API_KEY = "mjPPt1dcjX4B7LIzgtaYQ781ahZUxMvQXWPyCV4y";
     private String hdUrl;
@@ -63,12 +76,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Button btnViewSavedImages = findViewById(R.id.btnViewSavedImages);
         imageView = findViewById(R.id.imageView);
         urlDisplay = findViewById(R.id.urlDisplay);
         dateDisplay = findViewById(R.id.dateDisplay);
         pickDateButton = findViewById(R.id.pickDateButton);
         saveButton = findViewById(R.id.saveButton);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
         pickDateButton.setOnClickListener(view -> {
             final Calendar c = Calendar.getInstance();
@@ -84,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         saveButton.setOnClickListener(view -> {
-
             //exception
             if (imageView.getDrawable() == null) {
                 Toast.makeText(MainActivity.this, "Pick a date", Toast.LENGTH_SHORT).show();
@@ -108,9 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     saveImageToStorageAndDatabase();
                 }
             }
-
         });
-
 
         btnViewSavedImages.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +141,64 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Set up the navigation view listener
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.home) {
+                // Close drawer and do nothing as we are already in MainActivity
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else if (itemId == R.id.saved_images) {
+                Intent intentSavedImages = new Intent(MainActivity.this, SavedImagesActivity.class);
+                startActivity(intentSavedImages);
+            }
+            // ... handle other menu items if any
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+
+        // drawer toggle
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+
+// Help
+
+    private void displayHelpDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Help")
+                .setMessage("Instructions on how to use the interface...")
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+@Override
+public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_help, menu);
+    return true;
+}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_help) {
+            displayHelpDialog();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showHelpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.help)
+                .setMessage("Instructions on how to use the interface...")
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 
@@ -269,7 +348,6 @@ public class MainActivity extends AppCompatActivity {
 
                 dateDisplay.setText("Date: " + date);
                 urlDisplay.setText(hdUrl);
-
                 urlDisplay.setOnClickListener(v -> {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(hdUrl));
                     startActivity(browserIntent);
@@ -334,5 +412,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
+
 
 }
