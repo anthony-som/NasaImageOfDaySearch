@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Recherche d\'images de la NASA du jour</string>
+    <string name="image_description">NASA Image of the Day</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="help">Aide</string>
+    <string name='pickDate'>Choisir la date</string>
+    <string name='saveImage'>Enregistrer l\'image</string>
+    <string name='viewSaved'>Afficher enregistré</string>
+    <string name='homeText'>maison</string>
+    <string name='savedImages'>Images enregistrées</string>
+    <string name='deleteText'>Supprimer</string>
+</resources>
