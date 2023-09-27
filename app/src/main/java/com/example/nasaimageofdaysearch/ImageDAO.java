@@ -8,6 +8,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
+/**
+ * DAO for image entities
+ * Execute queries to manipulate database of image
+ */
 
 @Dao
 public interface ImageDAO {

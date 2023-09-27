@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/home"
-            android:title="Home" />
+            android:title="@string/homeText" />
 
         <item
             android:id="@+id/saved_images"
-            android:title="Saved Images" />
+            android:title="@string/savedImages" />
     </group>
 
 </menu>

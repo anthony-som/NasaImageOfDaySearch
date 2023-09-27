@@ -17,17 +17,6 @@
             android:layout_height="50dp"
             android:background="#ADD8E6" />
 
-<!--        <Button-->
-<!--            android:id="@+id/btnReturnHome"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="20dp"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:backgroundTint="#0B3D91"-->
-<!--            android:text="Return Home" -->
-<!--            />-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -37,7 +26,7 @@
             android:scrollbars="vertical" />
     </LinearLayout>
 
-    <!-- Navigation View (Drawer) -->
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view_saved"
         android:layout_width="wrap_content"

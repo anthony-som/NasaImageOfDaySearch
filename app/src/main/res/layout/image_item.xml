@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#F3F3F3"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:background="#F3F3F3">
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/imageItem"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:contentDescription="@string/image_description"
         android:scaleType="centerCrop" />
 
     <TextView
@@ -18,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="#0B3D91"
-        android:text="Date" />
+        android:text="Date"
+        android:textColor="#0B3D91" />
 
     <TextView
         android:id="@+id/deleteImage"
@@ -28,8 +27,8 @@
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="#FC3D21"
-        android:text="Delete" />
+        android:text="Delete"
+        android:textColor="#FC3D21" />
 
 
 </LinearLayout>

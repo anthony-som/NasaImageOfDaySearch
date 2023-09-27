@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private String date;
     private String url;
     private static final int REQUEST_MEDIA_ACCESS_PERMISSION = 102;
-
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -71,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
     private final String API_KEY = "mjPPt1dcjX4B7LIzgtaYQ781ahZUxMvQXWPyCV4y";
     private String hdUrl;
     private static final int WRITE_STORAGE_PERMISSION_REQUEST_CODE = 101;
+
+    /**
+     * Initalizes main acitivty and UI components such as button to save images into database and button to view images
+     * Initalizes date picker for the app
+     * Requests permission to read/write storage for app
+     * Initalizes navigation drawer
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,31 +114,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
         saveButton.setOnClickListener(view -> {
-            //exception
+            //Display toast is user tries to save an image that is not there
             if (imageView.getDrawable() == null) {
                 Toast.makeText(MainActivity.this, "Pick a date", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            // Ask permission
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_MEDIA_IMAGES},
-                            REQUEST_MEDIA_ACCESS_PERMISSION);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_MEDIA_ACCESS_PERMISSION);
                 } else {
                     saveImageToStorageAndDatabase();
                 }
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            WRITE_STORAGE_PERMISSION_REQUEST_CODE);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION_REQUEST_CODE);
                 } else {
                     saveImageToStorageAndDatabase();
                 }
             }
         });
 
+        // Navigate to SavedImagesActivity when button is clicked
         btnViewSavedImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,14 +149,11 @@ public class MainActivity extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == R.id.home) {
-                // Close drawer and do nothing as we are already in MainActivity
                 drawerLayout.closeDrawer(GravityCompat.START);
             } else if (itemId == R.id.saved_images) {
                 Intent intentSavedImages = new Intent(MainActivity.this, SavedImagesActivity.class);
                 startActivity(intentSavedImages);
             }
-            // ... handle other menu items if any
-
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
@@ -165,22 +165,22 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
     }
 
-
-// Help
+    /**
+     * Help dialog
+     * Inflates the menu with a help dialog. When pressed, display instructions to use the current displayed page
+     */
 
     private void displayHelpDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Help")
-                .setMessage("Instructions on how to use the interface...")
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
+        new AlertDialog.Builder(this).setTitle("Help").setMessage("Click \"Pick Date\" to select a photo." + "\n" + "Click \"Save Image\" button to save a photo" + "\n" + "Click \"View Saved\" to view the saved images").setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss()).show();
     }
-@Override
-public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_help, menu);
-    return true;
-}
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_help, menu);
+        return true;
+    }
+
+    // When user clicks help, call displayHelpDialog method
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -193,15 +193,14 @@ public boolean onCreateOptionsMenu(Menu menu) {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showHelpDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.help)
-                .setMessage("Instructions on how to use the interface...")
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
-    }
 
+    /**
+     * Save and delete NASA images to/from device storage and database
+     * Manage permission results for storage access
+     * Handle UI feedback
+     */
 
+    // saves the bitmap image to external storage with a name based on the provided date
     private String saveImageToStorage(Bitmap bitmap, String date) {
         String savedImagePath = null;
         String imageFileName = "NASA_" + date + ".jpg";
@@ -227,6 +226,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         return savedImagePath;
     }
 
+    // inserts the image's metadata into the database.
     private void saveImageDetailsToDatabase(String date, String url, String hdUrl, String imagePath) {
         Image image = new Image();
         image.setDate(date);
@@ -240,6 +240,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }).start();
     }
 
+    // retrieve the current image from the view, saves it to storage, and stores its details in the database
     private void saveImageToStorageAndDatabase() {
         Bitmap imageBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         String imagePath;
@@ -258,6 +259,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }
     }
 
+    // Saves the provided bitmap image to the shared storage
     private String saveImageToSharedStorage(Bitmap bitmap) {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.DISPLAY_NAME, "NASA_" + date + ".jpg");
@@ -276,7 +278,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         return null;
     }
 
-
+    // Handles the result of permission requests to save images
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -295,6 +297,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }
     }
 
+    // Deletes the selected image from both the storage and the database
     private void deleteImageFromStorageAndDatabase() {
         NasaImageDatabase db = NasaImageDatabase.getInstance(this);
         new Thread(() -> {
@@ -314,6 +317,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }).start();
     }
 
+    // Deletes the image at the provided path from the storage
     private void deleteImageFromStorage(String imagePath) {
         File file = new File(imagePath);
         if (file.exists()) {
@@ -322,11 +326,13 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }
     }
 
+    // Removes the image with the provided URI from shared storage
     private void deleteImageFromSharedStorage(String imageUri) {
         getContentResolver().delete(Uri.parse(imageUri), null, null);
     }
 
 
+    // Asynchronously fetches and displays a NASA image for a given date.
     private class FetchImageTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... dates) {
@@ -339,13 +345,12 @@ public boolean onCreateOptionsMenu(Menu menu) {
             return null;
         }
 
-
+        // display date of image
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
-
                 dateDisplay.setText("Date: " + date);
                 urlDisplay.setText(hdUrl);
                 urlDisplay.setOnClickListener(v -> {
@@ -357,6 +362,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }
     }
 
+    // Fetches image URL
     private String fetchNasaImageUrl(String date) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -398,7 +404,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         return null;
     }
 
-
+    // Downloads and returns bitmap image from the URL
     private Bitmap loadImageFromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
@@ -412,7 +418,6 @@ public boolean onCreateOptionsMenu(Menu menu) {
             return null;
         }
     }
-
 
 
 }

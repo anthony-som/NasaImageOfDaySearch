@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">NasaImageOfDaySearch</string>
+    <string name="app_name">Nasa Image Of Day Search</string>
     <string name="image_description">NASA Image of the Day</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="help">Help</string>
-
+    <string name='pickDate'>Pick Date</string>
+    <string name='saveImage'>Save Image</string>
+    <string name='viewSaved'>View Saved</string>
+    <string name='homeText'>Home</string>
+    <string name='savedImages'>Saved Images</string>
+    <string name='deleteText'>Delete</string>
 </resources>

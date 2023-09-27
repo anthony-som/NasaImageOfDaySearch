@@ -24,6 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Retrieve image details from Image class and displays list of images using recycler view
+ * Utilize ImageDao class to delete images from database
+ *
+ */
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ImageViewHolder> {
     private List<Image> images;
     private Context context;
@@ -32,12 +37,14 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         this.images = images != null ? images : new ArrayList<>();
         this.context = context;
     }
+
+    // Updates the data in the adapter and refresh.
     public void updateData(List<Image> newImages) {
         this.images = newImages != null ? newImages : new ArrayList<>();
         notifyDataSetChanged();
     }
 
-
+    // Creates and returns a new ViewHolder for displaying an image item in the list.
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -87,16 +94,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         });
 
 
-
-
     }
-
+    // handle deletion of an image from storage and/or database.
     private class DeleteImageTask extends AsyncTask<Image, Void, Boolean> {
         int position;
 
         DeleteImageTask(int position) {
             this.position = position;
         }
+
         @Override
         protected Boolean doInBackground(Image... images) {
             String imagePath = images[0].getImagePath();
@@ -128,13 +134,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
                 Toast.makeText(context, "Failed to delete the image. Please try again.", Toast.LENGTH_SHORT).show();
             }
         }
+
         private boolean deleteImageFromMediaStore(String imagePath) {
             Uri imageUri = Uri.parse(imagePath);
             int deletedRows = context.getContentResolver().delete(imageUri, null, null);
             return deletedRows > 0;
         }
+
         private boolean deleteFileFromStorage(String path) {
-            if(path != null && !path.isEmpty()) {
+            if (path != null && !path.isEmpty()) {
                 File file = new File(path);
                 return file.delete();
             }
@@ -143,8 +151,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
 
     }
 
-
-
+    // Returns the number of  images that the adapter will display.
     @Override
     public int getItemCount() {
         return images.size();

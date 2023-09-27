@@ -23,6 +23,10 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Display and manage images saved
+ * Utilize navigation drawer to switch between home and image library
+ */
 public class SavedImagesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -42,14 +46,6 @@ public class SavedImagesActivity extends AppCompatActivity {
         // Initialize and set the custom Toolbar as the ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar_saved);
         setSupportActionBar(toolbar);
-
-//        // Setup Button to return to MainActivity
-//        Button btnReturnHome = findViewById(R.id.btnReturnHome);
-//        btnReturnHome.setOnClickListener(v -> {
-//            Intent intent = new Intent(SavedImagesActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        });
 
         // Setup RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
@@ -73,15 +69,13 @@ public class SavedImagesActivity extends AppCompatActivity {
         navigationViewSaved.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            // TODO: Replace the IDs below with your actual menu item IDs from the drawer_menu.xml
             if (itemId == R.id.home) {
                 Intent homeIntent = new Intent(SavedImagesActivity.this, MainActivity.class);
                 startActivity(homeIntent);
                 finish();
             } else if (itemId == R.id.saved_images) {
-                drawerLayoutSaved.closeDrawers();  // You're already in the SavedImagesActivity
+                drawerLayoutSaved.closeDrawers();
             }
-            // ... Handle other menu items if needed ...
             else {
                 drawerLayoutSaved.closeDrawers();
             }
@@ -90,11 +84,16 @@ public class SavedImagesActivity extends AppCompatActivity {
         });
     }
 
-    //Help
+    /**
+     * Help dialog
+     * Inflates the menu with a help dialog. When pressed, display instructions to use the current displayed page
+     */
+
     private void displayHelpDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Help")
-                .setMessage("Instructions on how to use the interface...")
+                .setMessage("These are your saved photos!" + "\n" +
+                        "Click \"Delete\" below the image date to remove it from library." + "\n" + "Use the menu to navigate back home")
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
                 .show();
     }
@@ -116,7 +115,13 @@ public class SavedImagesActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    //Help end
+
+    /**
+     * load saved images from the database
+     * verifies if the images still exist
+     * filters out any invalid images
+     */
+
     private class LoadImagesTask extends AsyncTask<Void, Void, List<Image>> {
 
         @Override

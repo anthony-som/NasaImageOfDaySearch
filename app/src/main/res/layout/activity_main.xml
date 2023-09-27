@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#0B3D91"
-                android:text="Pick Date"
+                android:text="@string/pickDate"
                 app:layout_constraintEnd_toStartOf="@id/saveButton"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
