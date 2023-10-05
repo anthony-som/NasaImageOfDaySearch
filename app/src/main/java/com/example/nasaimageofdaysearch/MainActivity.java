@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Asynchronously fetches and displays a NASA image for a given date.
+    //  fetches and displays a NASA image for a given date.
     private class FetchImageTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... dates) {
